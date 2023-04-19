@@ -1,0 +1,47 @@
+name: faslh-generate
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        default: Generated
+        required: false
+        description: "Commit message"
+      lastCommit:
+        required: true
+        description: "Changes commit"
+      newCommit:
+        required: true
+        description: "Changes commit"
+      token:
+        required: true
+        description: "Token"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout App Repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{secrets.ENGINE_TOKEN}}
+
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: Cache deps
+        run: echo "Add caching step for npx - https://github.com/microsoft/playwright/issues/7249"
+
+      - name: Execute Faslh Engine
+        run: npx @faslh/github-action-changes ${{ toJSON(inputs.lastCommit) }} ${{ toJSON(inputs.newCommit) }} ${{ inputs.token }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.ENGINE_TOKEN}}
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ inputs.commit_message }}
+          create_branch: false
+          branch: main
+          commit_options: "--no-verify"
+          push_options: "--force"

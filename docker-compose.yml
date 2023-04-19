@@ -1,0 +1,16 @@
+# Development only configuration. Please modify/amend as per needed for production use.
+# Reload on change is working while serving within docker. Thanks goes to nodemon.
+version: "3"
+services:
+  backend:
+    image: node:alpine
+    container_name: faslh-api-template
+    working_dir: /usr/src/app
+    entrypoint: [ "npm", "start" ]
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    ports:
+      - "3000:3000"

@@ -1,0 +1,6 @@
+{
+  "srcRoot": "src",
+  "basePath": "src/app",
+  "features": "src/app/features",
+  "tsConfigFilePath": "tsconfig.json"
+}
